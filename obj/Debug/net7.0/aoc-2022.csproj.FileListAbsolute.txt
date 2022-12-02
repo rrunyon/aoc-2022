@@ -1,0 +1,15 @@
+/Users/rick/code/aoc-2022/bin/Debug/net7.0/aoc-2022
+/Users/rick/code/aoc-2022/bin/Debug/net7.0/aoc-2022.deps.json
+/Users/rick/code/aoc-2022/bin/Debug/net7.0/aoc-2022.runtimeconfig.json
+/Users/rick/code/aoc-2022/bin/Debug/net7.0/aoc-2022.dll
+/Users/rick/code/aoc-2022/bin/Debug/net7.0/aoc-2022.pdb
+/Users/rick/code/aoc-2022/obj/Debug/net7.0/aoc-2022.csproj.AssemblyReference.cache
+/Users/rick/code/aoc-2022/obj/Debug/net7.0/aoc-2022.GeneratedMSBuildEditorConfig.editorconfig
+/Users/rick/code/aoc-2022/obj/Debug/net7.0/aoc-2022.AssemblyInfoInputs.cache
+/Users/rick/code/aoc-2022/obj/Debug/net7.0/aoc-2022.AssemblyInfo.cs
+/Users/rick/code/aoc-2022/obj/Debug/net7.0/aoc-2022.csproj.CoreCompileInputs.cache
+/Users/rick/code/aoc-2022/obj/Debug/net7.0/aoc-2022.dll
+/Users/rick/code/aoc-2022/obj/Debug/net7.0/refint/aoc-2022.dll
+/Users/rick/code/aoc-2022/obj/Debug/net7.0/aoc-2022.pdb
+/Users/rick/code/aoc-2022/obj/Debug/net7.0/aoc-2022.genruntimeconfig.cache
+/Users/rick/code/aoc-2022/obj/Debug/net7.0/ref/aoc-2022.dll
