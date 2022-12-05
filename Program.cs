@@ -17,3 +17,5 @@ System.Console.WriteLine(Solutions.FourTwo.Output());
 
 System.Console.WriteLine("Solution for 5-1:");
 System.Console.WriteLine(Solutions.FiveOne.Output());
+System.Console.WriteLine("Solution for 5-2:");
+System.Console.WriteLine(Solutions.FiveTwo.Output());
