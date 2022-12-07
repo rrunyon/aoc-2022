@@ -24,3 +24,6 @@ System.Console.WriteLine("Solution for 6-1:");
 System.Console.WriteLine(Solutions.SixOne.Output());
 System.Console.WriteLine("Solution for 6-2:");
 System.Console.WriteLine(Solutions.SixTwo.Output());
+
+System.Console.WriteLine("Solution for 7-1:");
+System.Console.WriteLine(Solutions.SevenOne.Output());
