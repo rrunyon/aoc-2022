@@ -32,3 +32,5 @@ System.Console.WriteLine(Solutions.SevenTwo.Output());
 
 System.Console.WriteLine("Solution for 8-1:");
 System.Console.WriteLine(Solutions.EightOne.Output());
+System.Console.WriteLine("Solution for 8-2:");
+System.Console.WriteLine(Solutions.EightTwo.Output());
