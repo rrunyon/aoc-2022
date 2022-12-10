@@ -6,9 +6,7 @@ namespace Solutions {
     }
 
     private static int cycles = 0;
-
     private static int register = 1;
-
     private static List<int> signalStrengths = new List<int>();
 
     private static void Tick() {

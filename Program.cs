@@ -42,3 +42,5 @@ System.Console.WriteLine(Solutions.NineTwo.Output());
 
 System.Console.WriteLine("Solution for 10-1:");
 System.Console.WriteLine(Solutions.TenOne.Output());
+System.Console.WriteLine("Solution for 10-2:");
+Solutions.TenTwo.Output();
