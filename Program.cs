@@ -47,3 +47,5 @@ Solutions.TenTwo.Output();
 
 System.Console.WriteLine("Solution for 11-1:");
 System.Console.WriteLine(Solutions.ElevenOne.Output());
+System.Console.WriteLine("Solution for 11-2:");
+System.Console.WriteLine(Solutions.ElevenTwo.Output());

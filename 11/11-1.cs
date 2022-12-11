@@ -1,8 +1,21 @@
-namespace Solutions {
-  class ElevenOne {
+using System.Numerics;
 
-    public static int Output() {
+namespace Solutions {
+
+  class ElevenOne {
+    public static BigInteger Output() {
+      return Eleven.Solve(20, true);
+    }
+  }
+
+  class Eleven {
+
+    private static int divisorsProduct = 1;
+
+    public static BigInteger Solve(int rounds, Boolean divideWorries) {
       string[] lines = System.IO.File.ReadAllText(@"./11/input.txt").Split("\n");
+      // Reset between test runs
+      divisorsProduct = 1;
       List<Monkey> monkeys = new List<Monkey>();
       Monkey currentMonkey = new Monkey();
 
@@ -33,9 +46,9 @@ namespace Solutions {
         }
       }
 
-      Dictionary<int, int> inspectionCounts = new Dictionary<int, int>();
+      Dictionary<int, BigInteger> inspectionCounts = new Dictionary<int, BigInteger>();
 
-      for (var i = 0; i < 20; i++) {
+      for (var i = 0; i < rounds; i++) {
         for (var j = 0; j < monkeys.Count; j++) {
           var monkey = monkeys[j];
 
@@ -43,8 +56,12 @@ namespace Solutions {
             if (!inspectionCounts.ContainsKey(j)) inspectionCounts.Add(j, 0);
             inspectionCounts[j]++;
 
-            int worryLevel = monkey.Operate(item);
-            worryLevel /= 3;
+            BigInteger worryLevel = monkey.Operate(item);
+            if (divideWorries) {
+              worryLevel /= 3;
+            } else {
+              worryLevel %= divisorsProduct;
+            }
             var receiver = monkey.Test(worryLevel) ? monkey.trueTestReceiver : monkey.falseTestReceiver;
             monkeys[receiver].items.Add(worryLevel);
           }
@@ -53,7 +70,7 @@ namespace Solutions {
         }
       }
 
-      List<int> counts = new List<int>();
+      List<BigInteger> counts = new List<BigInteger>();
       for (var i = 0; i < monkeys.Count; i++) {
         counts.Add(inspectionCounts[i]);
       }
@@ -63,25 +80,25 @@ namespace Solutions {
       return counts[counts.Count - 1] * counts[counts.Count - 2];
     }
 
-    private static List<int> ParseItems(string line){
-      List<int> list = new List<int>();
+    private static List<BigInteger> ParseItems(string line){
+      List<BigInteger> list = new List<BigInteger>();
       string[] parsed = line.Split(":")[1].Split(", ");
 
       foreach (var number in parsed) {
-        list.Add(int.Parse(number));
+        list.Add(BigInteger.Parse(number));
       }
 
       return list;
     }
 
-    private static Func<int, int> ParseOperation(string line) {
+    private static Func<BigInteger, BigInteger> ParseOperation(string line) {
       string operation = line.Split("=")[1].Trim();
 
       if (operation.Contains('+')) {
-        int operand = int.Parse(operation.Split("+")[1]);
+        var operand = int.Parse(operation.Split("+")[1]);
         return old => old + operand;
       } else if (operation.Contains('-')) {
-        int operand = int.Parse(operation.Split("-")[1]);
+        var operand = int.Parse(operation.Split("-")[1]);
         return old => old - operand;
       } else if (operation.Contains('*')) {
         string operand = operation.Split("*")[1];
@@ -91,23 +108,25 @@ namespace Solutions {
           return old => old * int.Parse(operand);
         }
       } else {
-        int operand = int.Parse(operation.Split("/")[1]);
+        var operand = int.Parse(operation.Split("/")[1]);
         return old => old - operand;
       }
     }
 
-    private static Func<int, Boolean> ParseTest(string line) {
+    private static Func<BigInteger, Boolean> ParseTest(string line) {
       int operand = int.Parse(line.Split(" ").Last());
+      divisorsProduct *= operand;
       return input => input % operand == 0;
     }
   }
 
   class Monkey {
-    public List<int> items = new List<int>();
+    public List<BigInteger> items = new List<BigInteger>();
     public int trueTestReceiver = -1;
     public int falseTestReceiver = -1;
+    public int testOperand = -1;
 
-    public Func<int, int> Operate = i => -1;
-    public Func<int, Boolean> Test = i => true;
+    public Func<BigInteger, BigInteger> Operate = i => 1;
+    public Func<BigInteger, Boolean> Test = i => true;
   }
 }
