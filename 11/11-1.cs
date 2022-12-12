@@ -3,7 +3,7 @@ using System.Numerics;
 namespace Solutions {
 
   class ElevenOne {
-    public static BigInteger Output() {
+    public static Int128 Output() {
       return Eleven.Solve(20, true);
     }
   }
@@ -12,7 +12,7 @@ namespace Solutions {
 
     private static int divisorsProduct = 1;
 
-    public static BigInteger Solve(int rounds, Boolean divideWorries) {
+    public static Int128 Solve(int rounds, Boolean divideWorries) {
       string[] lines = System.IO.File.ReadAllText(@"./11/input.txt").Split("\n");
       // Reset between test runs
       divisorsProduct = 1;
@@ -46,7 +46,7 @@ namespace Solutions {
         }
       }
 
-      Dictionary<int, BigInteger> inspectionCounts = new Dictionary<int, BigInteger>();
+      Dictionary<int, Int128> inspectionCounts = new Dictionary<int, Int128>();
 
       for (var i = 0; i < rounds; i++) {
         for (var j = 0; j < monkeys.Count; j++) {
@@ -56,7 +56,7 @@ namespace Solutions {
             if (!inspectionCounts.ContainsKey(j)) inspectionCounts.Add(j, 0);
             inspectionCounts[j]++;
 
-            BigInteger worryLevel = monkey.Operate(item);
+            Int128 worryLevel = monkey.Operate(item);
             if (divideWorries) {
               worryLevel /= 3;
             } else {
@@ -70,7 +70,7 @@ namespace Solutions {
         }
       }
 
-      List<BigInteger> counts = new List<BigInteger>();
+      List<Int128> counts = new List<Int128>();
       for (var i = 0; i < monkeys.Count; i++) {
         counts.Add(inspectionCounts[i]);
       }
@@ -80,18 +80,18 @@ namespace Solutions {
       return counts[counts.Count - 1] * counts[counts.Count - 2];
     }
 
-    private static List<BigInteger> ParseItems(string line){
-      List<BigInteger> list = new List<BigInteger>();
+    private static List<Int128> ParseItems(string line){
+      List<Int128> list = new List<Int128>();
       string[] parsed = line.Split(":")[1].Split(", ");
 
       foreach (var number in parsed) {
-        list.Add(BigInteger.Parse(number));
+        list.Add(Int128.Parse(number));
       }
 
       return list;
     }
 
-    private static Func<BigInteger, BigInteger> ParseOperation(string line) {
+    private static Func<Int128, Int128> ParseOperation(string line) {
       string operation = line.Split("=")[1].Trim();
 
       if (operation.Contains('+')) {
@@ -113,7 +113,7 @@ namespace Solutions {
       }
     }
 
-    private static Func<BigInteger, Boolean> ParseTest(string line) {
+    private static Func<Int128, Boolean> ParseTest(string line) {
       int operand = int.Parse(line.Split(" ").Last());
       divisorsProduct *= operand;
       return input => input % operand == 0;
@@ -121,12 +121,12 @@ namespace Solutions {
   }
 
   class Monkey {
-    public List<BigInteger> items = new List<BigInteger>();
+    public List<Int128> items = new List<Int128>();
     public int trueTestReceiver = -1;
     public int falseTestReceiver = -1;
     public int testOperand = -1;
 
-    public Func<BigInteger, BigInteger> Operate = i => 1;
-    public Func<BigInteger, Boolean> Test = i => true;
+    public Func<Int128, Int128> Operate = i => 1;
+    public Func<Int128, Boolean> Test = i => true;
   }
 }
