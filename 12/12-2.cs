@@ -2,7 +2,7 @@ using System.Numerics;
 
 namespace Solutions {
 
-  class TwelveOne {
+  class TwelveTwo {
     public static int Output() {
       return GetShortestPathLength();
     }
@@ -23,12 +23,10 @@ namespace Solutions {
       Queue<int[]> queue = new Queue<int[]>();
       for (var i = 0; i < graph.Length; i++) {
         for (var j = 0; j < graph[0].Length; j++) {
-          if (graph[i][j] == 'S') {
+          if (graph[i][j] == 'S' || graph[i][j] == 'a') {
             queue.Enqueue(new int[]{ i, j });
-            break;
           }
         }
-        if (queue.Count > 0) break;
       }
       HashSet<string> visited = new HashSet<string>();
       visited.Add(0 + " " + 0);
@@ -60,7 +58,7 @@ namespace Solutions {
             }
           }
         }
-        
+
         depth++;
       }
 

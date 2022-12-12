@@ -52,3 +52,5 @@ System.Console.WriteLine(Solutions.ElevenTwo.Output());
 
 System.Console.WriteLine("Solution for 12-1:");
 System.Console.WriteLine(Solutions.TwelveOne.Output());
+System.Console.WriteLine("Solution for 12-2:");
+System.Console.WriteLine(Solutions.TwelveTwo.Output());
