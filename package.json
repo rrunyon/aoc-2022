@@ -1,6 +1,7 @@
 {
   "type": "module",
   "dependencies": {
-    "@datastructures-js/priority-queue": "^6.1.4"
+    "@datastructures-js/priority-queue": "^6.1.4",
+    "fs": "^0.0.1-security"
   }
 }
