@@ -21,7 +21,6 @@ function decodeSignal() {
 }
 
 function isOrderedPair(left, right, index = 0) {
-  console.log(left, right);
   if (index >= left.length && index >= right.length) {
     return undefined;
   } else if (index >= left.length) {
@@ -38,11 +37,11 @@ function isOrderedPair(left, right, index = 0) {
     } else if (leftVal > rightVal) {
       return 1;
     } else {
-      return isOrderedPair(leftVal, rightVal, index + 1);
+      return isOrderedPair(left, right, index + 1);
     }
   } else if (Array.isArray(leftVal) && Array.isArray(rightVal)) {
     let result = isOrderedPair(leftVal, rightVal, 0);
-    if (typeof result === 'boolean') {
+    if (typeof result === 'number') {
       return result;
     } else {
       return isOrderedPair(left, right, index + 1);
