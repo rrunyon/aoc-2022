@@ -10,7 +10,7 @@ function decodeSignal() {
   }
   packets.push([[2]]);
   packets.push([[6]]);
-  packets.sort((a, b) => isOrderedPair([a, b]) ? -1 : 1);
+  packets.sort(isOrderedPair);
 
   let decoderKey = 1;
   for (let i = 0; i < packets.length; i++) {
@@ -20,37 +20,37 @@ function decodeSignal() {
   return decoderKey;
 }
 
-function isOrderedPair(pair, index = 0) {
-  let [left, right] = pair;
+function isOrderedPair(left, right, index = 0) {
+  console.log(left, right);
   if (index >= left.length && index >= right.length) {
     return undefined;
   } else if (index >= left.length) {
-    return true;
+    return -1;
   } else if (index >= right.length) {
-    return false;
+    return 1;
   }
 
   let leftVal = left[index];
   let rightVal = right[index];
   if (typeof leftVal === 'number' && typeof rightVal === 'number') {
     if (leftVal < rightVal) {
-      return true;
+      return -1;
     } else if (leftVal > rightVal) {
-      return false;
+      return 1;
     } else {
-      return isOrderedPair(pair, index + 1, index + 1);
+      return isOrderedPair(leftVal, rightVal, index + 1);
     }
   } else if (Array.isArray(leftVal) && Array.isArray(rightVal)) {
-    let result = isOrderedPair([leftVal, rightVal], 0, 0);
+    let result = isOrderedPair(leftVal, rightVal, 0);
     if (typeof result === 'boolean') {
       return result;
     } else {
-      return isOrderedPair(pair, index + 1, index + 1);
+      return isOrderedPair(left, right, index + 1);
     }
   } else if (typeof leftVal === 'number' && typeof rightVal !== 'number') {
-    return isOrderedPair([[leftVal], rightVal], 0, 0);
+    return isOrderedPair([leftVal], rightVal, 0);
   } else if (typeof leftVal !== 'number' && typeof rightVal === 'number') {
-    return isOrderedPair([leftVal, [rightVal]], 0, 0);
+    return isOrderedPair(leftVal, [rightVal], 0);
   }
 
   return undefined;
