@@ -19,6 +19,8 @@ namespace Solutions {
       char[][] graph = new char[lines.Length][];
       for (var i = 0; i < lines.Length; i++) graph[i] = lines[i].ToCharArray();
 
+      var shortest = int.MaxValue;
+      
       int depth = 0;
       Queue<int[]> queue = new Queue<int[]>();
       for (var i = 0; i < graph.Length; i++) {
