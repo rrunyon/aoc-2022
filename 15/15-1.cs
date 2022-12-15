@@ -7,60 +7,48 @@ namespace Solutions {
       return Solution();
     }
 
-    public static int XOffset = 1500000;
-    public static int YOffset = 1500000;
     public static int MinX = int.MaxValue;
     public static int MaxX = -int.MaxValue;
     public static int MinY = int.MaxValue;
     public static int MaxY = -int.MaxValue;
     public static List<Sensor> Sensors = new List<Sensor>();
-    public static List<Beacon> Beacons = new List<Beacon>();
+    //public static List<Beacon> Beacons = new List<Beacon>();
+    public static Dictionary<string, int[]> Beacons = new Dictionary<string, int[]>();
 
     public static int Solution() {
       string[] lines = System.IO.File.ReadAllText(@"./15/input.txt").Split("\n");
       ParseInput(lines);
 
-      char[][] grid = new char[MaxY + YOffset][];
-      for (var i = 0; i <= MaxY + YOffset; i++) {
-        char[] row = new char[MaxX + XOffset];
-        for (var j = 0; j < MaxX + XOffset; j++) {
-          row[j] = '.';
-        }
-        grid[i] = row;
-      }
+      int count = 0;
+      for (var i = MinX - 10000000; i <= MaxX + 10000000; i++) {
+        var x = i;
+        var y = 2000000;
+        var anyMatching = false;
 
-      foreach (var beacon in Beacons) {
-        grid[beacon.Y][beacon.X] = 'B'; 
-      }
-
-      foreach (var sensor in Sensors) {
-        grid[sensor.Y][sensor.X] = 'S';
-        var upY = sensor.Y;
-        var downY = sensor.Y;
-        var left = sensor.X - sensor.ClosestBeaconDistance;
-        var right = sensor.X + sensor.ClosestBeaconDistance;
-
-        while (left <= right) {
-          for (var i = left; i <= right; i++) {
-            Print(grid);
-            if (upY >= 0 && left >= 0 && i < grid[0].Length && grid[upY][i] == '.') {
-              grid[upY][i] = '#';
-            }
-            if (downY < grid.Length && i >= 0 && i < grid[0].Length && grid[downY][i] == '.') {
-              grid[downY][i] = '#';
-            }
+        foreach (var beacon in Beacons) {
+          var beaconX = beacon.Value[0];
+          var beaconY = beacon.Value[1];
+          if (beaconX == x && beaconY == y) {
+            //System.Console.Write("B");
+            count--;
           }
-
-          left++;
-          right--;
-          upY--;
-          downY++;
         }
-      }
 
-      var count = 0;
-      for (var i = 0; i < grid[20000].Length; i++) {
-        if (grid[20000][i] == '#') count++;
+        foreach (var sensor in Sensors) {
+          int pointDistance = Math.Abs(sensor.X - x) + Math.Abs(sensor.Y - y);
+          if (sensor.ClosestBeaconDistance >= pointDistance) {
+            anyMatching = true;
+            break;
+          };
+          if (anyMatching) break;
+        }
+
+        if (anyMatching) {
+          //System.Console.Write("#");
+          count++;
+        } else {
+          //System.Console.Write(".");
+        }
       }
 
       return count;
@@ -97,8 +85,8 @@ namespace Solutions {
         var sensor = new Sensor(sensorX, sensorY, distance);
         Sensors.Add(sensor);
 
-        var beacon = new Beacon(beaconX, beaconY);
-        Beacons.Add(beacon);
+        var beaconKey = beaconX + " " + beaconY;
+        Beacons[beaconKey] = new int[]{ beaconX, beaconY };
       }
     }
   }
@@ -112,15 +100,6 @@ namespace Solutions {
       X = x;
       Y = y;
       ClosestBeaconDistance = closestBeaconDistance;
-    }
-  }
-  class Beacon {
-    public int X;
-    public int Y;
-
-    public Beacon(int x, int y) {
-      X = x;
-      Y = y;
     }
   }
 }
