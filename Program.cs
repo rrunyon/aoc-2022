@@ -62,3 +62,5 @@ System.Console.WriteLine(Solutions.FourteenTwo.Output());
 
 System.Console.WriteLine("Solution for 15-1:");
 System.Console.WriteLine(Solutions.FifteenOne.Output());
+System.Console.WriteLine("Solution for 15-2:");
+System.Console.WriteLine(Solutions.FifteenTwo.Output());
