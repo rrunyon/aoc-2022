@@ -7,9 +7,162 @@ namespace Solutions {
       return Solution();
     }
 
-    public static void PrintCave(char[][] cave) {
+    private static char[][] cave = new char[][]{};
+    private static HashSet<string> fallingRockPoints = new HashSet<string>();
+    private static HashSet<string> intermediateRockPoints = new HashSet<string>();
+    private static int minY = int.MaxValue;
+
+    public static int Solution() {
+      char[] movements = System.IO.File.ReadAllText(@"./17/input.txt").ToCharArray();
+      int movementIndex = 0;
+      cave = CreateCave();
+
+      minY = cave.Length;
+      for (var i = 0; i < 2022; i++) {
+        int startX = 2;
+        int startY = minY - 4;
+        Rock rock = GetCurrentRock(i, startX, startY);
+
+        Console.WriteLine("Inserting new rock");
+        foreach (var space in rock.Spaces) {
+          int currentX = startX + space[1];
+          int currentY = startY + space[0];
+
+          fallingRockPoints.Add(currentX + " " + currentY);
+          cave[currentY][currentX] = '@';
+        }
+        PrintCave(cave);
+
+        while (true) {
+          var movement = movements[movementIndex++ % movements.Length];
+          Console.WriteLine("Moving: " + movement);
+
+          if (movement == '>') {
+            if (IsBlocked(1, 0)) {
+              Console.WriteLine("Skipping");
+            } else {
+              Translate(1, 0);
+              //PrintCave(cave);
+            }
+          } else if (movement == '<') {
+            if (IsBlocked(-1, 0)) {
+              Console.WriteLine("Skipping");
+            } else {
+              Translate(-1, 0);
+              //PrintCave(cave);
+            }
+          }
+
+          if (IsBlocked(0, 1)) {
+            foreach (var point in fallingRockPoints) {
+              var x = int.Parse(point.Split(" ")[0]);
+              var y = int.Parse(point.Split(" ")[1]);
+
+              minY = Math.Min(minY, y);
+              cave[y][x] = '#';
+            }
+            fallingRockPoints.Clear();
+            Console.WriteLine("Freezing rock");
+            //PrintCave(cave);
+            break;
+          } else {
+            Console.WriteLine("Moving: Down");
+            Translate(0, 1);
+            //PrintCave(cave);
+          }
+        }
+      }
+
+      return cave.Length - minY;
+    }
+
+    private static char[][] CreateCave() {
+      char[][] cave = new char[4000][];
+      for (var i = 0; i < cave.Length; i++) {
+        char[] row = new char[7];
+        for (var j = 0; j < row.Length; j++) {
+          row[j] = '.';
+        }
+        cave[i] = row;
+      }
+
+      return cave;
+    }
+
+    private static Rock GetCurrentRock(int i, int startX, int startY) {
+      Rock rock = new Horizontal(startX, startY);
+      switch(i % 5) {
+        case 0:
+          rock = new Horizontal(startX, startY);
+          break;
+        case 1:
+          rock = new Plus(startX, startY);
+          break;
+        case 2:
+          rock = new Angled(startX, startY);
+          break;
+        case 3:
+          rock = new Vertical(startX, startY);
+          break;
+        case 4:
+          rock = new Square(startX, startY);
+          break;
+      }
+
+      return rock;
+    }
+
+    private static Boolean IsBlocked(int xShift, int yShift) {
+      var blocked = false;
+      foreach (var point in fallingRockPoints) {
+        var x = int.Parse(point.Split(" ")[0]);
+        var y = int.Parse(point.Split(" ")[1]);
+        var newX = x + xShift;
+        var newY = y + yShift;
+
+        if (newX >= 0 && newX < cave[0].Length && newY >= 0 && newY < cave.Length && cave[newY][newX] != '#') {
+          continue;
+        } else {
+          blocked = true;
+          break;
+        }
+      }
+
+      return blocked;
+    }
+
+    private static void Translate(int xShift, int yShift) {
+      foreach (var point in fallingRockPoints) {
+        var x = int.Parse(point.Split(" ")[0]);
+        var y = int.Parse(point.Split(" ")[1]);
+        var newX = x + xShift;
+        var newY = y + yShift;
+
+        intermediateRockPoints.Add(newX + " " + newY);
+      }
+      ClearAndSwap(fallingRockPoints, intermediateRockPoints);
+    }
+
+    private static void ClearAndSwap(HashSet<string> primary, HashSet<string> secondary) {
+      foreach (var point in primary) {
+        var x = int.Parse(point.Split(" ")[0]);
+        var y = int.Parse(point.Split(" ")[1]);
+        cave[y][x] = '.';
+      }
+      foreach (var point in intermediateRockPoints) {
+        var x = int.Parse(point.Split(" ")[0]);
+        var y = int.Parse(point.Split(" ")[1]);
+        cave[y][x] = '@';
+      }
+
+      primary.Clear();
+      foreach (var point in secondary) primary.Add(point);
+      secondary.Clear();
+    }
+
+    private static void PrintCave(char[][] cave) {
       System.Console.WriteLine("---------------------------------");
-      for (var i = 3950; i < cave.Length; i++) {
+      for (var i = 3975; i < cave.Length; i++) {
         var row = cave[i];
         var line = i.ToString();
         while (line.Length < 5) {
@@ -32,155 +185,6 @@ namespace Solutions {
       }
       System.Console.Write('+');
       System.Console.WriteLine();
-    }
-
-    public static int Solution() {
-      char[] movements = System.IO.File.ReadAllText(@"./17/test-input.txt").ToCharArray();
-
-      char[][] cave = new char[4000][];
-      for (var i = 0; i < cave.Length; i++) {
-        char[] row = new char[7];
-        for (var j = 0; j < row.Length; j++) {
-          row[j] = '.';
-        }
-        cave[i] = row;
-      }
-
-      int minY = cave.Length - 1;
-      HashSet<string> fallingRockPoints = new HashSet<string>();
-      HashSet<string> intermediateRockPoints = new HashSet<string>();
-      for (var i = 0; i < 2022; i++) {
-        int startX = 2;
-        int startY = minY - 3;
-        Rock rock = new Horizontal(startX, startY);
-        switch(i % 5) {
-          case 0:
-            rock = new Horizontal(startX, startY);
-            break;
-          case 1:
-            rock = new Plus(startX, startY);
-            break;
-          case 2:
-            rock = new Angled(startX, startY);
-            break;
-          case 3:
-            rock = new Vertical(startX, startY);
-            break;
-          case 4:
-            rock = new Square(startX, startY);
-            break;
-        }
-
-        foreach (var space in rock.Spaces) {
-          int currentX = startX + space[1];
-          int currentY = startY + space[0];
-
-          fallingRockPoints.Add(currentX + " " + currentY);
-          cave[currentY][currentX] = '@';
-        }
-
-        foreach (var movement in movements) {
-          Console.WriteLine("Moving: " + movement);
-          PrintCave(cave);
-
-          if (movement == '>') {
-            var blocked = false;
-            foreach (var point in fallingRockPoints) {
-              var x = int.Parse(point.Split(" ")[0]);
-              var y = int.Parse(point.Split(" ")[1]);
-              var newX = x + 1;
-
-              if (newX >= cave[0].Length || cave[y][newX] == '#') {
-                blocked = true;
-                break;
-              }
-            }
-            if (blocked) continue;
-
-            foreach (var point in fallingRockPoints) {
-              var x = int.Parse(point.Split(" ")[0]);
-              var y = int.Parse(point.Split(" ")[1]);
-              var newX = x + 1;
-
-              cave[y][x] = '.';
-              cave[y][newX] = '@';
-              intermediateRockPoints.Add(newX + " " + y);
-            }
-            ClearAndSwap(fallingRockPoints, intermediateRockPoints);
-          } else if (movement == '<') {
-            var blocked = false;
-            foreach (var point in fallingRockPoints) {
-              var x = int.Parse(point.Split(" ")[0]);
-              var y = int.Parse(point.Split(" ")[1]);
-              var newX = x - 1;
-
-              if (newX < 0 || cave[y][newX] == '#') {
-                blocked = true;
-                break;
-              }
-            }
-            if (blocked) continue;
-
-            foreach (var point in fallingRockPoints) {
-              var x = int.Parse(point.Split(" ")[0]);
-              var y = int.Parse(point.Split(" ")[1]);
-              var newX = x - 1;
-
-              cave[y][x] = '.';
-              cave[y][newX] = '@';
-              intermediateRockPoints.Add(newX + " " + y);
-            }
-            ClearAndSwap(fallingRockPoints, intermediateRockPoints);
-          }
-
-          var blockedDown = false;
-          foreach (var point in fallingRockPoints) {
-            var x = int.Parse(point.Split(" ")[0]);
-            var y = int.Parse(point.Split(" ")[1]);
-            var newY = y + 1;
-
-            if (newY >= cave.Length || cave[newY][x] == '#') {
-              blockedDown = true;
-              break;
-            }
-          }
-          if (blockedDown) {
-            foreach (var point in fallingRockPoints) {
-              var x = int.Parse(point.Split(" ")[0]);
-              var y = int.Parse(point.Split(" ")[1]);
-
-              cave[y][x] = '#';
-            }
-            fallingRockPoints.Clear();
-            break;
-          }
-
-          Console.WriteLine("Moving: Down");
-          foreach (var point in fallingRockPoints) {
-            var x = int.Parse(point.Split(" ")[0]);
-            var y = int.Parse(point.Split(" ")[1]);
-            minY = Math.Min(minY, y);
-            var newY = y + 1;
-
-            cave[y][x] = '.';
-            cave[newY][x] = '@';
-            intermediateRockPoints.Add(x + " " + newY);
-          }
-          foreach (var point in fallingRockPoints) {
-            var y = int.Parse(point.Split(" ")[1]);
-
-          }
-          ClearAndSwap(fallingRockPoints, intermediateRockPoints);
-        }
-      }
-
-      return minY;
-    }
-
-    public static void ClearAndSwap(HashSet<string> primary, HashSet<string> secondary) {
-      primary.Clear();
-      foreach (var point in secondary) primary.Add(point);
-      secondary.Clear();
     }
   }
 

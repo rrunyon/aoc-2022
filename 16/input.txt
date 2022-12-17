@@ -58,4 +58,4 @@ Valve PQ has flow rate=0; tunnels lead to valves FL, MW
 Valve GL has flow rate=0; tunnels lead to valves AA, DW
 Valve OX has flow rate=0; tunnels lead to valves MA, AA
 Valve MA has flow rate=10; tunnels lead to valves RR, YC, GA, OX, KP
-Valve FQ has flow rate=12; tunnels lead to valves QN, WT, UG, RQ, QM
+Valve FQ has flow rate=12; tunnels lead to valves QN, WT, UG, RQ, QM								
