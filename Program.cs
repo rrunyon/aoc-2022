@@ -71,4 +71,6 @@ System.Console.WriteLine(Solutions.FourteenTwo.Output());
 // System.Console.WriteLine(Solutions.SixteenTwo.Output());
 
 System.Console.WriteLine("Solution for 17-1:");
-System.Console.WriteLine(Solutions.SeventeenOne.Output());
+// System.Console.WriteLine(Solutions.SeventeenOne.Output());
+System.Console.WriteLine("Solution for 17-2:");
+System.Console.WriteLine(Solutions.SeventeenTwo.Output());
