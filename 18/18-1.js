@@ -12,6 +12,7 @@ const dirs = [
 function measureDropletSurfaceArea() {
   let input = fs.readFileSync('./18/input.txt', { encoding: 'utf8', flag: 'r' }).split('\n');
   let droplet = new Set;
+
   for (let line of input) {
     droplet.add(line);
   }
