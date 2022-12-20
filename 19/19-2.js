@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import { Queue } from '@datastructures-js/queue';
 
 function solution() {
-  let input = fs.readFileSync('./19/test-input.txt', { encoding: 'utf8', flag: 'r' }).split('\n');
+  let input = fs.readFileSync('./19/input.txt', { encoding: 'utf8', flag: 'r' }).split('\n');
   let blueprints = parseBlueprints(input);
 
   let geodeCounts = [];
@@ -15,7 +15,7 @@ function solution() {
     console.log(geodeCounts);
   }
 
-  return geodeCounts.map((count, i) => count * (i + 1)).reduce((a, b) => a + b);
+  return geodeCounts.reduce((a, b) => a * b);
 
   function dfs(
     blueprint,
@@ -58,13 +58,13 @@ function solution() {
     state.obsidian += state.obsidianRobots;
     state.geodes += state.geodeRobots;
 
-    let maxAchievable = state.geodes + ((24 - state.minute) * state.geodeRobots);
-    for (let i = state.minute; i <= 24; i++) {
-      maxAchievable += (24 - i);
+    let maxAchievable = state.geodes + ((32 - state.minute) * state.geodeRobots);
+    for (let i = state.minute; i <= 32; i++) {
+      maxAchievable += (32 - i);
     }
     if (maxAchievable < currentMax) return 0;
 
-    if (state.minute >= 24) {
+    if (state.minute >= 32) {
       currentMax = Math.max(currentMax, state.geodes);
       return state.geodes;
     }
@@ -142,7 +142,7 @@ function parseBlueprints(input) {
     blueprints.push(blueprint);
   }
 
-  return blueprints;
+  return blueprints.slice(0, 3);
 }
 
 console.log(solution());

@@ -14,7 +14,7 @@ function solution() {
     console.log(geodeCounts);
   }
 
-  return geodeCounts.reduce((a, b) => a * b);
+  return geodeCounts.map((count, i) => count * (i + 1)).reduce((a, b) => a + b);
 
   function dfs(
     blueprint,
@@ -141,7 +141,8 @@ function parseBlueprints(input) {
     blueprints.push(blueprint);
   }
 
-  return blueprints.slice(3);
+  return blueprints;
+
 }
 
 console.log(solution());
