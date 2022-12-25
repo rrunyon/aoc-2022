@@ -6,6 +6,7 @@ const directions = {
   '>': [0, 1],
   'v': [1, 0],
   '<': [0, -1],
+  _: [0, 0],
 };
 
 function solution() {
@@ -85,12 +86,6 @@ function solution() {
             queue.enqueue(newKey);
           }
         }
-      }
-
-      // stand still if we're not in a blizzard
-      if (!currentBlizzardPositions.has(position)) {
-        visiting.add(position);
-        queue.enqueue(position);
       }
     }
 
