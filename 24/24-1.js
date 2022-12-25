@@ -12,13 +12,12 @@ function solution() {
   let input = fs.readFileSync('./24/input.txt', { encoding: 'utf8', flag: 'r' }).split('\n').filter(l => !!l);
   let { blizzardPositions: currentBlizzardPositions, startPosition } = parseInput(input);
   let nextBlizzardPositions = new Map;
+  let minute = 0;
 
   let queue = new Queue;
   queue.enqueue(startPosition);
   let visiting = new Set;
   visiting.add(startPosition);
-
-  let minute = 0;
 
   while (queue.size()) {
     console.log('------------------------------')
@@ -66,7 +65,6 @@ function solution() {
         }
       }
 
-      let moved = false;
       for (let direction of Object.values(directions)) {
         let newY = y + direction[0];
         let newX = x + direction[1];
@@ -74,7 +72,6 @@ function solution() {
 
         if (!currentBlizzardPositions.has(newKey)) {
           if (input[newY] && input[newY][newX] !== '#' && !visiting.has(newKey)) {
-            moved = true;
             visiting.add(newKey);
             queue.enqueue(newKey);
           }
@@ -82,7 +79,7 @@ function solution() {
       }
 
       // stand still if we're not in a blizzard
-      if (!moved && (!currentBlizzardPositions.has(position) || !currentBlizzardPositions.get(position))) {
+      if (!currentBlizzardPositions.has(position)) {
         visiting.add(position);
         queue.enqueue(position);
       }
@@ -117,7 +114,7 @@ function parseInput(input) {
   return { blizzardPositions, startPosition };
 };
 
-function print(positions, visiting, input) {
+function print(positions, visiting, input, minute) {
   console.log();
 
   for (let i = 0; i < input.length; i++) {
