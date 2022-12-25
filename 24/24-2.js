@@ -21,8 +21,6 @@ function solution() {
   let stage = 0;
 
   while (queue.size()) {
-    console.log('------------------------------')
-    console.log('minute: ', minute);
     print(currentBlizzardPositions, visiting, input);
     for (let [position, blizzards] of currentBlizzardPositions) {
       let [currentY, currentX] = JSON.parse(position);
@@ -125,7 +123,7 @@ function parseInput(input) {
   return { blizzardPositions, startPosition };
 };
 
-function print(positions, visiting, input, minute) {
+function print(positions, visiting, input) {
   console.log();
 
   for (let i = 0; i < input.length; i++) {

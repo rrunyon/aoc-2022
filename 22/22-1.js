@@ -103,7 +103,7 @@ function solution() {
 function print([y, x], board) {
   console.log();
   for (let i = 0; i < board.length; i++) {
-    let row = [];
+    let row = [i];
     for (let j = 0; j < board.length; j++) {
       if (i === y && j === x) {
         row.push('X');
@@ -116,11 +116,20 @@ function print([y, x], board) {
 }
 
 function parseInput(input) {
+  let maxLength = -Infinity;
   const board = [];
   let i = 0;
   while (input[i]) {
+    maxLength = Math.max(maxLength, input[i].length);
     board.push(input[i].split(''));
     i++;
+  }
+
+  // Right pad short lines
+  for (let i = 0; i < board.length; i++) {
+    while (board[i].length < maxLength) {
+      board[i].push(' ');
+    }
   }
 
   const instructions = input[input.length - 2];
