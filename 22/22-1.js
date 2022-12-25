@@ -1,94 +1,148 @@
 import * as fs from 'fs';
 
-class Solution {
+function solution() {
+  const input = fs.readFileSync('./22/input.txt', { encoding: 'utf8', flag: 'r' }).split('\n');
+  const { board, instructions } = parseInput(input);
 
-  constructor() {
-    let input = fs.readFileSync('./22/test-input.txt', { encoding: 'utf8', flag: 'r' }).split('\n');
-    this.parseInput(input);
-  }
+  // right, down, left, up
+  const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]];
 
-  parseInput(input) {
-    this.board = [];
+  // which direction we're facing
+  let heading = 0
 
-    let i = 0;
-    while (input[i]) {
-      let line = input[i].split('');
-      this.board.push(line);
-      i++;
+  let instructionsPointer = 0;
+
+  let currentPosition = getInitialPosition(board);
+
+  while (instructionsPointer < instructions.length) {
+    let number = '';
+    while (!isNaN(parseInt(instructions[instructionsPointer]))) {
+      number += instructions[instructionsPointer++];
     }
+    number = parseInt(number);
+    console.log("number: ", number);
+    print(currentPosition, board);
 
-    this.instructions = input[input.length - 1];
-    this.TURNS = {
-      L: -1,
-      R: 1,
-    };
-
-    this.FACINGS = [
-      'right',
-      'down',
-      'left',
-      'up',
-    ];
-
-    this.DIRECTIONS = {
-      right: [0, 1],
-      down: [1, 0],
-      left: [0, -1],
-      up: [-1, 0],
-    };
-
-    this.facingIndex = 0;
-
-    for (let i = 0; i < this.board.length; i++) {
-      for (let j = 0; i < this.board[0].length; j++) {
-        if (board[i][j] === '.') {
-          this.row = i;
-          this.column = j;
-          break;
-        }
-
-        if (this.row && this.column) break;
-      }
-    }
-  }
-
-  get facing() {
-    return this.FACINGS[facingIndex];
-  }
-
-  evaluateInstructions() {
-    let instructionPointer = 0;
-    while (instructionPointer < this.instructions.length);
-      let number = '';
-      let instructionChar = this.instructions[instructionPointer++];
-
-      while (!isNaN(parseInt(instructionChar))) {
-        number.push(instructionChar);
-        instructionChar = this.instructions[instructionPointer++];
-      }
-
-      number = parseInt(number);
-      this.move(number);
-
-      let turn = this.instructions[instructionPointer];
-      this.facingIndex = (this.facingIndex + this.TURNS[turn]) + this.FACINGS.length % this.FACINGS.length;
-    }
-  }
-
-  move(number) {
     for (let i = 0; i < number; i++) {
-      let newRow = this.row + this.DIRECTIONS[this.facing][0] % this.board.length;
-      let newColumn = this.column + this.DIRECTIONS[this.facing][1] % this.board[0].length;
+      console.log('-----------------------');
+      let [y, x] = currentPosition;
+      let direction = directions[heading];
+      let nextY = y + direction[0];
+      let nextX = x + direction[1];
+      let nextPosition = [nextY, nextX];
 
-      if (newRow < 0 || newRow >= board.length || newColumn < 0 || newColumn >= board[0].length) {
+      if (isOutOfBounds(nextPosition, board)) {
+        console.log('out of bounds');
+        if (heading === 0) {
+          let tryX = 0;
+          while (board[y][tryX] === ' ') {
+            tryX++;
+          }
+
+          if (board[y][tryX] === '#') {
+            break;
+          } else {
+            nextX = tryX;
+          }
+        } else if (heading === 1) {
+          let tryY = 0;
+          while (board[tryY][x] === ' ') {
+            tryY++;
+          }
+
+          if (board[tryY][x] === '#') {
+            break;
+          } else {
+            nextY = tryY;
+          }
+        } else if (heading === 2) {
+          let tryX = board[0].length - 1;
+          while (board[y][tryX] === ' ') {
+            tryX--;
+          }
+
+          if (board[y][tryX] === '#') {
+            break;
+          } else {
+            nextX = tryX;
+          }
+        } else if (heading === 3) {
+          let tryY = board.length - 1;
+          while (board[tryY][x] === ' ') {
+            tryY--;
+          }
+
+          if (board[tryY][x] === '#') {
+            break;
+          } else {
+            nextY = tryY;
+          }
+        }
+      } else if (board[nextY][nextX] === '#') {
+        console.log('blocked');
+        break;
       }
-      // check if out of bounds for the board and determine where to go next
-      // check if out of bounds for the maze and determine where to go next
-      // check if blocked by wall
-      // otherwise, continue
 
+      let headingChar = ['>', 'v', '<', '^'];
+      board[y][x] = headingChar[heading];
+      currentPosition = [nextY, nextX];
+      print(currentPosition, board);
+    }
+
+    let turn = instructions[instructionsPointer++];
+    if (turn) {
+      heading = turn === 'R' ? heading + 1 : heading - 1;
+      heading = (heading + 4) % 4;
+    }
+  }
+
+  console.log(currentPosition, heading);
+  return (1000 * (currentPosition[0] + 1)) + (4 * (currentPosition[1] + 1)) + heading;
+}
+
+function print([y, x], board) {
+  console.log();
+  for (let i = 0; i < board.length; i++) {
+    let row = [];
+    for (let j = 0; j < board.length; j++) {
+      if (i === y && j === x) {
+        row.push('X');
+      } else {
+        row.push(board[i][j]);
+      }
+    }
+    console.log(row.join(''));
+  }
+}
+
+function parseInput(input) {
+  const board = [];
+  let i = 0;
+  while (input[i]) {
+    board.push(input[i].split(''));
+    i++;
+  }
+
+  const instructions = input[input.length - 2];
+
+  return { board, instructions };
+}
+
+function getInitialPosition(board) {
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board.length; j++) {
+      if (board[i][j] === '.') return [i, j];
     }
   }
 }
 
-let solution = new Solution;
+function isOutOfBounds(position, board) {
+  let [y, x] = position;
+
+  if (x < 0 || x >= board[0].length || y < 0 || y >= board.length) return true;
+  if (board[y][x] === ' ') return true;
+
+  return false;
+}
+
+console.log(solution());

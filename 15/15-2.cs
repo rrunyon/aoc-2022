@@ -22,23 +22,25 @@ namespace Solutions {
       var MAX = 4000000;
 
       for (var i = 0; i <= MAX; i++) {
+        Console.WriteLine(i);
         if (i % 1000 == 0) Console.WriteLine(i);
-        for (var j = 0; j <= MAX; j++) {
+        var j = 0;
+        while (j <= MAX) {
           var anyMatching = false;
 
           foreach (var sensor in Sensors) {
             int pointDistance = Math.Abs(sensor.X - j) + Math.Abs(sensor.Y - i);
             if (sensor.ClosestBeaconDistance >= pointDistance) {
-              j = Math.Max(j, Math.Abs(sensor.Y - i) + sensor.ClosestBeaconDistance);
               anyMatching = true;
-              break;
+              j = Math.Max(j, j + (2 * (Math.Abs(sensor.Y - i) - sensor.ClosestBeaconDistance)));
             };
           }
 
           if (!anyMatching) {
             System.Console.WriteLine(j + " " + i);
             return j * 4000000 + i;
-            //System.Console.Write(".");
+          } else {
+            j++;
           }
         }
       }

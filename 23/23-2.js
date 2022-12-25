@@ -33,9 +33,9 @@ function solution() {
   let moves = new Map;
 
   for (let i = 0; i < 10000; i++) {
-    console.log('-------------------------------');
-    console.log("round: ", i);
-    print(elves);
+    // console.log('-------------------------------');
+    // console.log("round: ", i);
+    // print(elves);
 
     for (let elf of elves) {
       let [y, x] = JSON.parse(elf);
@@ -73,7 +73,7 @@ function solution() {
     // If our map is empty no elves move, i + 1 is the answer round
     if (moves.size === 0) return i + 1;
 
-    console.log(moves);
+    // console.log(moves);
     for (let [newKey, proposedElves] of moves) {
       if (proposedElves.length === 1) {
         let [elf] = proposedElves;
@@ -84,7 +84,6 @@ function solution() {
 
     moves.clear();
     directions.push(directions.shift());
-    console.log(elves.size);
   }
 }
 
